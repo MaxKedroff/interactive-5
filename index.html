@@ -3,20 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Найди нарушение</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
+
+  :root {
+    --main-font: 'Montserrat Alternates', sans-serif;
+  }
+
   body{
-    font-family: Arial, sans-serif;
+    font-family: var(--main-font);
     display:flex;
     flex-direction:column;
     align-items:center;
     padding:20px;
-    background:#f7f7f7;
+    
   }
 
   #photo-container{
     position:relative;
     max-width:800px;
-    width:100%;
+    width:80%;
     margin-bottom:20px;
   }
 
@@ -68,11 +74,20 @@
     font-size:1rem;
     cursor:pointer;
   }
+#container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid orange;
+    border-radius: 10px;
+    padding: 10px;
+}
 </style>
 </head>
 <body>
-
-<h1>Найди нарушение</h1>
+<div id="container">
+<p><strong>Тестовое задание. </strong>найдите нарушения при сервировке на фото ниже</p>
 <p id="status">Щёлкните по месту нарушения на фото.</p>
 
 <div id="photo-container">
@@ -82,7 +97,7 @@
 <ul id="log"></ul>
 
 <button id="restart">Начать сначала</button>
-
+</div>
 <script>
   // Фотографии и связанные с ними зоны нарушений
   const photos = [
