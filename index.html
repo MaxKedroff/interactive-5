@@ -5,76 +5,65 @@
 <title>Найди нарушение</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
-
   :root {
     --main-font: 'Montserrat Alternates', sans-serif;
   }
 
-  body{
+  body {
     font-family: var(--main-font);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:20px;
-    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
   }
 
-  #photo-container{
-    position:relative;
-    max-width:800px;
-    width:80%;
-    margin-bottom:20px;
+  #photo-container {
+    position: relative;
+    max-width: 800px;
+    width: 80%;
+    margin-bottom: 20px;
   }
 
-  #photo-container img{
-    width:100%;
-    display:block;
+  #photo-container img {
+    width: 100%;
+    display: block;
   }
 
   /* Невидимые кликабельные области */
-  .zone{
-    position:absolute;
+  .zone {
+    position: absolute;
   }
 
   /* Когда нарушение найдено — подсветка */
-  .zone.found{
-    border:4px solid #FF3636; /* зелёная рамка */
-    pointer-events:none;      /* исключить из кликов после нахождения */
+  .zone.found {
+    border: 4px solid #FF3636; /* зелёная рамка */
+    pointer-events: none;      /* исключить из кликов после нахождения */
   }
 
-  #status{
-    margin-bottom:10px;
-    font-size:1.1rem;
+  #status {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
   }
 
-  #log{
-    list-style:none;
-    padding:0;
-    margin:0 0 15px 0;
-    max-width:800px;
-    width:100%;
+  #log {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+    max-width: 800px;
+    width: 100%;
   }
-  #log li{
-    background:#fff;
-    border-left:4px solid #1abc9c;
-    padding:8px 12px;
-    margin-bottom:6px;
-    box-shadow:0 1px 3px rgba(0,0,0,0.08);
-    border-radius:4px;
-    font-size:0.95rem;
+  
+  #log li {
+    background: #fff;
+    border-left: 4px solid #1abc9c;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border-radius: 4px;
+    font-size: 0.95rem;
   }
 
-  #restart{
-    display:none;
-    padding:10px 18px;
-    border:none;
-    background:#1abc9c;
-    border-radius:6px;
-    color:#fff;
-    font-size:1rem;
-    cursor:pointer;
-  }
-#container {
+  #container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -82,7 +71,43 @@
     border: 2px solid orange;
     border-radius: 10px;
     padding: 10px;
-}
+  }
+
+  .buttons-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  #next {
+    padding: 10px 18px;
+    border: none;
+    background: #e67e22;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    display: none;
+  }
+
+  #next:hover {
+    background: #d35400;
+  }
+
+  #restart {
+    padding: 10px 18px;
+    border: none;
+    background: #1abc9c;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    display: none;
+  }
+
+  #restart:hover {
+    background: #16a085;
+  }
 </style>
 </head>
 <body>
@@ -95,7 +120,10 @@
 
 <ul id="log"></ul>
 
-<button id="restart">Начать сначала</button>
+<div class="buttons-container">
+  <button id="next">Далее</button>
+  <button id="restart">Начать сначала</button>
+</div>
 </div>
 <script>
   // Фотографии и связанные с ними зоны нарушений
@@ -139,9 +167,10 @@
   ];
 
   const container = document.getElementById("photo-container");
-  const img        = document.getElementById("photo");
-  const statusP    = document.getElementById("status");
-  const logList    = document.getElementById("log");
+  const img = document.getElementById("photo");
+  const statusP = document.getElementById("status");
+  const logList = document.getElementById("log");
+  const nextBtn = document.getElementById("next");
   const restartBtn = document.getElementById("restart");
 
   let currentIndex = 0;
@@ -149,10 +178,11 @@
   /**
    * Загружает фото и отрисовывает интерактивные зоны
    */
-  function loadPhoto(index){
+  function loadPhoto(index) {
     // Очистить старые зоны и сообщения
     container.querySelectorAll(".zone").forEach(z => z.remove());
     logList.innerHTML = "";
+    nextBtn.style.display = "none";
 
     const data = photos[index];
     img.src = data.src;
@@ -161,15 +191,15 @@
       data.zones.forEach((z) => {
         const div = document.createElement("div");
         div.className = "zone";
-        div.style.left   = (z.left * 100)   + "%";
-        div.style.top    = (z.top  * 100)   + "%";
-        div.style.width  = (z.width * 100)  + "%";
-        div.style.height = (z.height* 100)  + "%";
+        div.style.left = (z.left * 100) + "%";
+        div.style.top = (z.top * 100) + "%";
+        div.style.width = (z.width * 100) + "%";
+        div.style.height = (z.height * 100) + "%";
         div.dataset.found = "false";
-        div.dataset.msg   = z.msg;
+        div.dataset.msg = z.msg;
 
         div.addEventListener("click", () => {
-          if(div.dataset.found === "false"){
+          if (div.dataset.found === "false") {
             div.dataset.found = "true";
             div.classList.add("found");
             logViolation(div.dataset.msg);
@@ -187,7 +217,7 @@
   /**
    * Добавляет пояснение в лог под картинкой
    */
-  function logViolation(text){
+  function logViolation(text) {
     const li = document.createElement("li");
     li.textContent = text;
     logList.appendChild(li);
@@ -196,23 +226,26 @@
   /**
    * Проверяет, найдены ли все зоны на текущем фото
    */
-  function checkAllFound(){
+  function checkAllFound() {
     const allFound = [...container.querySelectorAll(".zone")]
       .every(z => z.dataset.found === "true");
 
-    if(allFound){
-      currentIndex++;
-      if(currentIndex < photos.length){
-        statusP.textContent = "Отлично! Переходим к следующему фото…";
-        setTimeout(() => loadPhoto(currentIndex), 1500);
-      }else{
+    if (allFound) {
+      if (currentIndex < photos.length - 1) {
+        nextBtn.style.display = "inline-block";
+      } else {
         statusP.textContent = "Вы нашли все нарушения! 🎉";
         restartBtn.style.display = "inline-block";
       }
     }
   }
 
-  restartBtn.addEventListener("click", () =>{
+  nextBtn.addEventListener("click", () => {
+    currentIndex++;
+    loadPhoto(currentIndex);
+  });
+
+  restartBtn.addEventListener("click", () => {
     currentIndex = 0;
     restartBtn.style.display = "none";
     loadPhoto(currentIndex);
@@ -221,6 +254,5 @@
   // Стартовое фото
   loadPhoto(currentIndex);
 </script>
-
 </body>
 </html>
