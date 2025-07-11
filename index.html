@@ -113,7 +113,7 @@
 <body>
 <div id="container">
 <p><strong>Тестовое задание. </strong>Кликни на область подноса, где ты видишь, что допущены ошибки сервировки.</p>
-
+<p id="status"></p>
 <div id="photo-container">
   <img id="photo" src="" alt="Фото для проверки">
 </div>
@@ -210,7 +210,7 @@
         container.appendChild(div);
       });
 
-      statusP.textContent = `Найдите все нарушения на фото (Всего: ${data.zones.length})`;
+      
     };
   }
 
@@ -231,12 +231,13 @@
       .every(z => z.dataset.found === "true");
 
     if (allFound) {
+      
       if (currentIndex < photos.length - 1) {
         nextBtn.style.display = "inline-block";
       } else {
         statusP.textContent = "Вы нашли все нарушения! 🎉";
-        restartBtn.style.display = "inline-block";
-
+        
+	console.log("Sending interactiveCompleted message");
         window.parent.postMessage('interactiveCompleted', '*');
 
       }
