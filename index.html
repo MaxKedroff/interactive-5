@@ -236,6 +236,9 @@
       } else {
         statusP.textContent = "Вы нашли все нарушения! 🎉";
         restartBtn.style.display = "inline-block";
+
+        window.parent.postMessage('interactiveCompleted', '*');
+
       }
     }
   }
